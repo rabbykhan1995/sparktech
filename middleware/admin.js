@@ -9,7 +9,7 @@ const isAdmin = async (req, res, next) => {
             return next();
         }
 
-        return res.status(202).json({
+        return res.status(401).json({
             msg:"unauthorized request"
         });
     } catch (error) {

@@ -7,7 +7,7 @@ const createBus = async (req, res) => {
     const {busType, operator, route, travelTime, stoppage, ticketPrice, totalSeats, model} = req.body;
     try {
      if(!busType || !operator || !route || !travelTime || !stoppage || !ticketPrice || !totalSeats || !model){
-         return res.status(303).json({msg:'all fields are required'});
+         return res.status(400).json({msg:'all fields are required'});
      }
 
      var seats;
@@ -36,12 +36,12 @@ const createBus = async (req, res) => {
      })
      
      if(!bus){
-         return res.json({msg:'bus not created'});
+         return res.status(202).json({msg:'bus not created'});
      }
      return res.status(201).json({msg:'successfully', result:bus});
     } catch (error) {
     
-     return res.status(501).json({
+     return res.status(500).json({
          msg:'internal server error'
      })
     }
@@ -87,7 +87,7 @@ const updateBus = async (req, res)=> {
 
         const updated = await Bus.findByIdAndUpdate({_id:id}, obj);
         if(!updated){
-            return res.status(401).json({msg:'update failed'});
+            return res.status(404).json({msg:'update failed'});
         }
 
         return res.status(201).json({msg:'update successfull', result:updated});

@@ -44,7 +44,7 @@ const viewTicket = async (req, res) => {
 
     
         if (!availableTickets.length) {
-            return res.status(404).json({ message: "No available tickets found" });
+            return res.status(204).json({ message: "No available tickets found" });
         }
     
        return res.status(200).json(availableTickets);
@@ -57,7 +57,7 @@ const viewBus = async (req, res)=> {
     try {
           const buses = await Bus.find({availability: true});
           if(buses.length === 0){
-                return res.json({msg:'currently no buses available'});
+                return res.status(204).json({msg:'currently no buses available'});
           }
 
           return res.status(200).json({msg:`${buses.length} buses are available right now`, result:buses });
@@ -78,7 +78,7 @@ const purchaseTicket = async (req, res) => {
 
 
         if (passenger > 4) {
-            return res.status(202).json({ msg: 'Please book for 4 or fewer passengers' });
+            return res.status(400).json({ msg: 'Please book for 4 or fewer passengers' });
         }
 
         // Create an array of userIds equal to the passenger count
@@ -98,7 +98,7 @@ const purchaseTicket = async (req, res) => {
         );
 
        
-        return res.status(200).json({ msg: "Ticket booked successfully", result: purchased });
+        return res.status(201).json({ msg: "Ticket booked successfully", result: purchased });
         
     } catch (error) {
         return res.status(500).json({ msg: 'Internal server error' });

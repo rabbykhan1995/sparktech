@@ -12,7 +12,7 @@ const isLoggedIn = async (req, res, next)=> {
     if(!tokenIsVerified){
         res.clearCookie('token');
         res.removeHeader('token');
-        return res.json({msg:'unauthorized request'}).status(300);
+        return res.status(401).json({msg:'unauthorized request'})
     }
     
     // if token verified then open the next route for user with storing the id and email attaching with the request body;
@@ -32,7 +32,7 @@ const isAlreadyLoggedIn = async (req, res, next)=> {
       return next();
     }
 
-    return res.json({msg:'already logged in'})
+    return res.status(304).json({msg:'already logged in'})
     
  
 }

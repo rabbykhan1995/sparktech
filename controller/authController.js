@@ -12,11 +12,11 @@ const userRegistration = async(req, res)=> {
 
        if(isEmailAlreadyExist){
           
-          return res.json({msg:'user already registered'});
+          return res.status(304).json({msg:'user already registered'});
        }
        // check password length is must be greater than 8, if less than 8, then quit the operation
        if(password.length < 8){
-          return res.json({msg:'password must be in 8 characters'});
+          return res.status(400).json({msg:'password must be in 8 characters'});
        }
        
        const hashedPassword = await hashPassword(password);
@@ -24,7 +24,7 @@ const userRegistration = async(req, res)=> {
        const newUser = await User.create({name, email, password:hashedPassword});
 
        if(!newUser) {
-          return res.json({msg:'registeration failed'});
+          return res.status(404).json({msg:'registeration failed'});
        }
 
       const token = await generateToken(newUser._id, email);
@@ -47,13 +47,13 @@ const userRegistration = async(req, res)=> {
       const user = await User.findOne({email});
 
       if(!user){
-         return res.status(401).json({msg:'wrong credential'});
+         return res.status(404).json({msg:'wrong credential'});
       }
 
       const isPasswordVerified = await comparePassword(password, user.password);
 
       if(!isPasswordVerified){
-         return res.status(401).json({msg:'wrong credential'});
+         return res.status(403).json({msg:'wrong credential'});
       }
       const token = await generateToken(user._id, email);
       res.cookie('token', token,{maxAge:3600000});
